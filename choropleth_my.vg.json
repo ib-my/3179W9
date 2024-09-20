@@ -1,0 +1,56 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": "Malaysia Expenditure on Environmental Protection by State in 2021",
+  "width": 1000,
+  "height": 400,
+  "projection": { "type": "equalEarth" },
+  "data": {
+    "url": "malaysia_states.topojson",
+    "format": { "type": "topojson", "feature": "states" }
+  },
+  "transform": [
+    {
+      "lookup": "properties.Name",
+      "from": {
+        "data": { "url": "clean_state_total.csv" },
+        "key": "State",
+        "fields": ["State", "Total"]
+      }
+    },
+    {
+      "lookup": "properties.Name",
+      "from": {
+        "data": { "url": "clean_population_state.csv" },
+        "key": "state",
+        "fields": ["state", "population"]
+      }
+    },
+    {
+      "calculate": "datum.Total / datum.population",
+      "as": "Normalized_Expenditure"
+    },
+    {
+      "calculate": "datum.population * 1000",
+      "as": "Actual_Population"
+    }
+  ],
+  "mark": { "type": "geoshape", "stroke": "black", "strokeWidth": 0.3 },
+  "encoding": {
+    "color": {
+      "field": "Normalized_Expenditure",
+      "type": "quantitative",
+      "title": "Expenditure per 1000 Population",
+      "scale": {
+            "type": "threshold",
+            "domain": [50, 100,150, 200],
+            "range": ["#ffffb2","#fecc5c","#fd8d3c","#f03b20","#bd0026"]
+          }
+    },
+    "tooltip": [
+      { "field": "properties.Name", "type": "nominal", "title": "State" },
+      { "field": "Total", "type": "quantitative", "title": "Total Expenditure", "format": ","},
+      { "field": "Actual_Population", "type": "quantitative", "title": "Population", "format": "," },
+      { "field": "Normalized_Expenditure", "type": "quantitative", "title": "Expenditure per 1K Pop","format": ",.2f" }
+    ]
+  }
+}
