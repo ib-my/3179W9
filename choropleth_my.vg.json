@@ -52,5 +52,10 @@
       { "field": "Actual_Population", "type": "quantitative", "title": "Population", "format": "," },
       { "field": "Normalized_Expenditure", "type": "quantitative", "title": "Expenditure per 1K Pop","format": ",.2f" }
     ]
+  },
+  "config": {
+  "view": {
+     "stroke": "transparent"
   }
+}
 }
